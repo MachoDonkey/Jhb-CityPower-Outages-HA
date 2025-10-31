@@ -1,0 +1,15 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Configure Jhb City Power Outages",
+        "data": {
+          "area": "Affected area",
+          "scan_interval": "Scan interval (seconds)",
+          "endpoint": "API endpoint",
+          "media_location": "Media location"
+        }
+      }
+    }
+  }
+}

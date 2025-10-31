@@ -2,7 +2,7 @@
   "name": "Jhb City Power Outages",
   "content_in_root": false,
   "domains": ["sensor"],
-  "filename": "custom_components/awesome_assistant",
+  "filename": "custom_components/jhb_citypower_outages",
   "render_readme": true,
   "issues": "",
   "zip_release": false

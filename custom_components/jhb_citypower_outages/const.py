@@ -1,4 +1,4 @@
-DOMAIN = "awesome_assistant"
+DOMAIN = "jhb_citypower_outages"
 DEFAULT_NAME = "Jhb City Power Outages"
 DEFAULT_SCAN_INTERVAL = 300  # seconds
 CONF_AREA = "area"

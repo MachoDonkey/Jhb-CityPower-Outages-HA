@@ -9,7 +9,7 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .const import DOMAIN, DEFAULT_NAME, CONF_AREA, CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
+from .const import DEFAULT_NAME, CONF_AREA, CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL
 from .coordinator import OutagesCoordinator
 
 _LOGGER = logging.getLogger(__name__)
@@ -45,14 +45,11 @@ class CityPowerOutagesSensor(SensorEntity):
         if not data:
             return None
         try:
-            # Attempt to mirror the example: pick the outages list and return IDs
-            # If data is array-like and contains 'outages' in [0], adapt accordingly.
             if isinstance(data, list) and data:
                 first = data[0]
                 outages = first.get("outages") or []
                 ids = [o.get("id") for o in outages if "id" in o]
                 return json.dumps(ids)
-            # Fallback: return JSON-dumped data keys
             return json.dumps(data)
         except Exception:  # pragma: no cover - defensive
             _LOGGER.exception("Error computing sensor state")

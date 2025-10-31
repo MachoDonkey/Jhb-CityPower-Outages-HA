@@ -14,7 +14,7 @@ async def test_coordinator_fetch(hass, aioclient_mock):
     # Mock the HTTP response
     aioclient_mock.get(endpoint, json=sample)
 
-    from custom_components.awesome_assistant.coordinator import OutagesCoordinator
+    from custom_components.jhb_citypower_outages.coordinator import OutagesCoordinator
 
     coord = OutagesCoordinator(hass, endpoint=endpoint, scan_interval=1)
     await coord.async_refresh()
@@ -30,8 +30,9 @@ async def test_sensor_state(hass, aioclient_mock):
 
     aioclient_mock.get(endpoint, json=sample)
 
-    from tests.common import MockConfigEntry
-    from custom_components.awesome_assistant.const import DOMAIN
+    # MockConfigEntry helper from the pytest-homeassistant-custom-component plugin
+    from pytest_homeassistant_custom_component.common import MockConfigEntry
+    from custom_components.jhb_citypower_outages.const import DOMAIN
 
     entry = MockConfigEntry(domain=DOMAIN, data={"area": "Test Area", "endpoint": endpoint, "scan_interval": 1})
     entry.add_to_hass(hass)

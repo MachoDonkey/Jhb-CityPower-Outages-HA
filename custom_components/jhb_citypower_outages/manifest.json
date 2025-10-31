@@ -1,8 +1,8 @@
 {
-  "domain": "awesome_assistant",
+  "domain": "jhb_citypower_outages",
   "name": "Jhb City Power Outages",
   "version": "0.1.0",
-  "documentation": "https://github.com/<your-org>/Jhb-CityPower-Outages-HA",
+  "documentation": "https://github.com/MachoDonkey/Jhb-CityPower-Outages-HA",
   "requirements": ["aiohttp>=3.8"],
   "dependencies": [],
   "codeowners": [],
