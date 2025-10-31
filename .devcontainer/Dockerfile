@@ -1,3 +1,29 @@
+FROM mcr.microsoft.com/vscode/devcontainers/python:0-3.11
+
+# Install system dependencies commonly needed for Home Assistant development
+ARG DEBIAN_FRONTEND=noninteractive
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        build-essential \
+        libffi-dev \
+        libssl-dev \
+        libjpeg-dev \
+        zlib1g-dev \
+        git \
+        curl \
+        ca-certificates \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
+
+# Ensure pip/setuptools up to date (postCreateCommand also runs in devcontainer.json)
+RUN python -m pip install --upgrade pip setuptools wheel
+
+# Create a non-root user (vscode user already exists in base image)
+USER vscode
+
+WORKDIR /workspace
+
+CMD ["sleep", "infinity"]
 FROM python:3.11-slim
 
 # Basic deps for Home Assistant
