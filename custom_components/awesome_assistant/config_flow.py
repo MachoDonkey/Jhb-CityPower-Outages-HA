@@ -6,7 +6,13 @@ import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.core import callback
 
-from .const import CONF_AREA, CONF_SCAN_INTERVAL, DEFAULT_SCAN_INTERVAL, DOMAIN
+from .const import (
+    CONF_AREA,
+    CONF_SCAN_INTERVAL,
+    DEFAULT_SCAN_INTERVAL,
+    DOMAIN,
+    CONF_MEDIA_DIR,
+)
 
 
 class CityPowerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
@@ -23,6 +29,10 @@ class CityPowerConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             {
                 vol.Required(CONF_AREA): str,
                 vol.Optional(CONF_SCAN_INTERVAL, default=DEFAULT_SCAN_INTERVAL): int,
+                # Optional: local testing endpoint (defaults to a local dummy service)
+                vol.Optional("endpoint", default="http://localhost:8080/outages"): str,
+                # Optional: media directory for downloaded PDFs (path inside HA config)
+                vol.Optional(CONF_MEDIA_DIR, default="media"): str,
             }
         )
 
