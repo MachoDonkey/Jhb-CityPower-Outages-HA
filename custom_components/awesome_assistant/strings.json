@@ -1,0 +1,16 @@
+{
+  "en": {
+    "title": "Jhb City Power Outages",
+    "config": {
+      "step": {
+        "user": {
+          "title": "Configure City Power Outages",
+          "data": {
+            "area": "Affected area",
+            "scan_interval": "Scan interval (seconds)"
+          }
+        }
+      }
+    }
+  }
+}

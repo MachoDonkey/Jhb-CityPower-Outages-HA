@@ -1,0 +1,16 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jhb-citypower-outages-ha"
+version = "0.1.0"
+description = "Home Assistant custom integration: Jhb City Power Outages (HACS-ready)"
+readme = "README.md"
+authors = [ { name = "", email = "" } ]
+dependencies = [
+    "aiohttp>=3.8",
+]
+
+[tool.ruff]
+line-length = 88

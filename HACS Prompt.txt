@@ -1,0 +1,75 @@
+Scaffold a Home Assistant HACS custom integration named Jhb-CityPower-Outages-HA using the cookiecutter-homeassistant-custom-component (oncleben31) template.
+
+Steps (ask for approval at each stage):
+
+1. Create a new Git repo locally and initialize it.
+
+2. Run the cookiecutter to generate the component (MIT license, python-package tooling, pre-commit, docs). 
+
+3. Ensure the template includes a devcontainer for HA Core; if not, add one referencing the integration_blueprint approach. 
+
+4. Implement a minimal but working integration: sensor platform with config_flow, manifest.json (domain awesome_assistant, version 0.1.0), and one sensor that pulls data from a dummy local endpoint (we’ll swap later).
+
+5. Add tests with pytest + HA test helpers; set up pre-commit, ruff, and mypy.
+
+6. Create .github/workflows CI: lint, type-check, tests.
+
+7. Prepare for HACS: ensure repo is public, set GitHub topics: home-assistant, hacs, custom-component; add a clear description and README usage instructions. 
+
+8. Add hacs.json if needed and verify structure matches HACS expectations.
+
+9. Commit all files, create a GitHub repo, push main, and open a draft release v0.1.0.
+
+10. Run the component inside the devcontainer, start HA, and verify the sensor shows up.
+
+11. Output a checklist for submitting to HACS and next features to implement.
+
+
+
+This will be a HACS integration to Home Assistant that will:
+1. Query the Jhb City Power API (https://api.citypower.co.za/outages-notifications-service/find-by-affected-area/area/%7BaffectedArea%7D?affectedArea=<ConfigItem_AreaName>) on a regular basis (<ConfigItem_ScanInterval> in minutes).
+2. Provide a Sensor to to Home Assistant as per <Sensor_RawQuery>.
+3. Provide the values from <Sensor_RawQuery> as additional Sensors.
+4. Determine the next outage based on the date, and provide a sensor for it's values.
+5. Download the outage_document for the next outage (base URL is "https://api.citypower.co.za/ftp-service/download-pdf/%7Bfilepath%7D?filepath=<url_encoded_outage_document>" to the Media location (accessible via media-source) provided in the config <ConfigItem_MediaLocation>.
+5. Upload the document to an AI (API key and endpoint to be provided as config items) and ask the AI to extract the Start and End date/times of the first outage in the document.
+6. Provide the outage start and end date as values against the next outage sensor.
+
+This is an example of calling the API for outages:
+rest:
+  #City Power
+  - resource: https://api.citypower.co.za/outages-notifications-service/find-by-affected-area/area/%7BaffectedArea%7D
+    method: GET
+    params:
+      affectedArea: "{{ states('input_text.citypower_affected_area') | lower | urlencode }}"
+    headers:
+      Accept: application/json
+      User-Agent: Mozilla/5.0
+    verify_ssl: false # flip to true once their chain is fixed
+    scan_interval: 300
+    sensor:
+      - name: City Power Outages Source
+        unique_id: citypower_outages_source
+        # STATE = ordered list of outage IDs (short, safe)
+        value_template: >
+          {{ (
+            value_json
+            | selectattr('id','equalto',1)
+            | map(attribute='outages')
+            | first
+            | default([])
+            | list
+            | sort(attribute='id')
+            | map(attribute='id')
+            | list
+          ) | tojson }}
+        # ATTRIBUTES = the heavy stuff (not limited to 255)
+        # Assumes response is a 1-element array; grab that element's fields.
+        json_attributes_path: "$[0]"
+        json_attributes:
+          - id
+          - outages
+        icon: mdi:transmission-tower
+				
+This is an example prompt for the AI to extract the dates from the PDF:
+You are given a City Power outage notice PDF. Extract the OUTAGE START and OUTAGE END date/time for the affected area. Consider the dates and times mentioned in this document are in SAST. If multiple slots are listed, choose the first upcoming slot. Return ONLY raw JSON on a single  line with no code fences, no markdown, and no extra text: {"start":"YYYY-MM-DDTHH:MM:SSZ","end":"YYYY-MM-DDTHH:MM:SSZ"}. If a value is unknown, set it to null. No other text.

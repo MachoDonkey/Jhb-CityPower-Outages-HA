@@ -1,0 +1,9 @@
+{
+  "name": "Jhb City Power Outages",
+  "content_in_root": false,
+  "domains": ["sensor"],
+  "filename": "custom_components/awesome_assistant",
+  "render_readme": true,
+  "issues": "",
+  "zip_release": false
+}
