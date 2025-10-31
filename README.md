@@ -20,3 +20,17 @@ Usage
 Notes
 - This scaffold uses a dummy local endpoint (http://localhost:8080/outages) by default; swap it with the real City Power API in integration options later.
 - The integration domain is currently `awesome_assistant` to match the scaffold template; this can be changed but must match `manifest.json` and the package folder name.
+
+Devcontainer (run Home Assistant in-container)
+
+1. Open this repository in VS Code and choose "Reopen in Container". The devcontainer will build an image that includes Home Assistant Core.
+2. After the container builds, open a terminal in VS Code. Start Home Assistant with:
+
+```bash
+./devcontainer/run_ha.sh
+```
+
+3. Home Assistant will use the config directory mounted at `/config` inside the container. If it's the first run, Home Assistant will create a default configuration. You can then add the integration by copying `custom_components/awesome_assistant` into the container's `/config/custom_components` (the repository is already mounted at `/workspace`, and the devcontainer mounts `/workspace/devcontainer/config` to `/config`).
+
+Notes:
+- The provided devcontainer is a simple development environment that installs Home Assistant via pip. For full integration tests you may prefer the `integration_blueprint` devcontainer used by many Home Assistant integrations — tell me and I can switch to that variant.
